@@ -1,39 +1,126 @@
-# Python Server
+# Anythink Market - Dual Server Architecture
 
-This project contains a FastAPI server implemented in Python. It provides two routes for managing a task list.
+This project contains both a Python FastAPI server and a Node.js Express server that provide identical task management functionality. Both servers offer the same API endpoints for managing a task list.
 
 ## Project Structure
 
-The project has the following files and directories:
+The project has the following structure:
 
-- `python-server/src/main.py`: This file contains the implementation of the FastAPI server with two routes. It handles adding a task to a list and retrieving the list.
+```
+Anythink-Market-28smiqjq/
+├── python-server/
+│   ├── src/
+│   │   ├── main.py          # FastAPI server implementation
+│   │   └── __init__.py      # Python package marker
+│   ├── requirements.txt     # Python dependencies
+│   └── Dockerfile          # Python server Docker configuration
+├── node-server/
+│   ├── src/
+│   │   └── app.js          # Express server implementation (translated from Python)
+│   ├── package.json        # Node.js dependencies and scripts
+│   ├── Dockerfile          # Node.js server Docker configuration
+│   └── .dockerignore       # Docker ignore file
+└── docker-compose.yml      # Multi-container orchestration
+```
 
-- `python-server/src/__init__.py`: This file is an empty file that marks the `src` directory as a Python package.
+### Key Files:
 
-- `python-server/requirements.txt`: This file lists the dependencies required for the FastAPI server and other dependencies.
-
-- `python-server/Dockerfile`: This file is used to build a Docker image for the FastAPI server. It specifies the base image, copies the source code into the image, installs the dependencies, and sets the command to run the server.
-
-- `docker-compose.yml`: This file is used to define and run multi-container Docker applications. It specifies the services to run, their configurations, and any dependencies between them.
+- **`python-server/src/main.py`**: FastAPI server with task management endpoints
+- **`node-server/src/app.js`**: Express server with identical functionality (translated from Python)
+- **`docker-compose.yml`**: Orchestrates both servers to run simultaneously
 
 ## Getting Started
 
-To run the FastAPI server using Docker, follow these steps:
+To run both servers using Docker Compose, follow these steps:
 
-- Build and start the Docker containers by running the following command:
+1. **Build and start both servers:**
 
-  ```shell
-  docker compose up
-  ```
+   ```shell
+   docker compose up --build
+   ```
 
-  This command will build the Docker image for the FastAPI server and start the containers defined in the `docker-compose.yml` file.
+   This command will:
+   - Build Docker images for both Python and Node.js servers
+   - Start both containers simultaneously
+   - Python server will be available on port `8000`
+   - Node.js server will be available on port `8001`
 
-- The FastAPI server should now be running. You can access at port `8000`.
+2. **Run individual servers:**
 
-## API Routes
+   **Python server only:**
+   ```shell
+   cd python-server
+   docker build -t python-server .
+   docker run -p 8000:8000 python-server
+   ```
 
-The FastAPI server provides the following API routes:
+   **Node.js server only:**
+   ```shell
+   cd node-server
+   docker build -t node-server .
+   docker run -p 8001:8001 node-server
+   ```
 
-- `POST /tasks`: Adds a task to the task list. The request body should contain the task details.
+## API Endpoints
 
-- `GET /tasks`: Retrieves the task list.
+Both servers provide identical API functionality:
+
+### Python Server (Port 8000) & Node.js Server (Port 8001)
+
+- **`GET /`**: Returns "Hello World"
+- **`GET /tasks`**: Retrieves the complete task list
+- **`POST /tasks`**: Adds a new task to the list
+  - Request body: `{"text": "Your task description"}`
+  - Response: `{"message": "Task added successfully"}`
+- **`GET /health`** (Node.js only): Health check endpoint
+
+### Pre-loaded Tasks
+
+Both servers start with these default tasks:
+- "Write a diary entry from the future"
+- "Create a time machine from a cardboard box"
+- "Plan a trip to the dinosaurs"
+- "Draw a futuristic city"
+- "List items to bring on a time-travel adventure"
+
+## Testing the APIs
+
+You can test both servers using curl:
+
+**Python server (port 8000):**
+```bash
+# Get all tasks
+curl http://localhost:8000/tasks
+
+# Add a new task
+curl -X POST http://localhost:8000/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"text": "New time travel mission"}'
+```
+
+**Node.js server (port 8001):**
+```bash
+# Get all tasks
+curl http://localhost:8001/tasks
+
+# Add a new task
+curl -X POST http://localhost:8001/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"text": "New time travel mission"}'
+
+# Health check
+curl http://localhost:8001/health
+```
+
+## Development
+
+### Python Server
+- Built with FastAPI and Pydantic for data validation
+- Uses uvicorn as the ASGI server
+- Auto-reloads on code changes in development mode
+
+### Node.js Server
+- Built with Express.js
+- Uses nodemon for development auto-restart
+- Includes graceful shutdown handling
+- Translated from the Python FastAPI implementation
