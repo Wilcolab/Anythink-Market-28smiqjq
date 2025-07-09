@@ -33,23 +33,6 @@ function calculate(operand1, operand2, operation) {
         case '/':
             uri += "?operation=divide";
             break;
-        case '^':
-            uri += "?operation=power";
-            break;
-        case 'sqrt':
-            uri += "?operation=sqrt";
-            operand2 = null; // Sqrt only needs one operand
-            break;
-        case '%':
-            uri += "?operation=modulus";
-            break;
-        case 'negate':
-            uri += "?operation=negate";
-            operand2 = null; // Negate only needs one operand
-            break;
-        case 'modulus':
-            uri += "?operation=modulus";
-            break;    
         default:
             setError();
             return;
