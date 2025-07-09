@@ -1,39 +1,99 @@
-# Python Server
+# Anythink Market - Multi-Server Application
 
-This project contains a FastAPI server implemented in Python. It provides two routes for managing a task list.
+This project contains multiple server implementations in different technologies. Currently includes two Node.js Express servers and maintains the original Python FastAPI server for reference.
 
 ## Project Structure
 
 The project has the following files and directories:
 
-- `python-server/src/main.py`: This file contains the implementation of the FastAPI server with two routes. It handles adding a task to a list and retrieving the list.
+### Node.js Servers
 
-- `python-server/src/__init__.py`: This file is an empty file that marks the `src` directory as a Python package.
+- `express-server/`: Simple Express server with no endpoints (port 8001)
+  - `src/app.js`: Main Express application with health check endpoint
+  - `package.json`: Dependencies and scripts for the Express server
+  - `Dockerfile`: Docker configuration for the Express server
+  - `nodemon.json`: Nodemon configuration for hot reloading
+  - `README.md`: Express server specific documentation
 
-- `python-server/requirements.txt`: This file lists the dependencies required for the FastAPI server and other dependencies.
+- `node-server/`: Node.js server with task management API (port 8000)
+  - `src/app.js`: Full Express application with task management endpoints
+  - `package.json`: Dependencies and scripts for the Node.js server
+  - `Dockerfile`: Docker configuration for the Node.js server
+  - `nodemon.json`: Nodemon configuration for hot reloading
+  - `README.md`: Node.js server specific documentation
 
-- `python-server/Dockerfile`: This file is used to build a Docker image for the FastAPI server. It specifies the base image, copies the source code into the image, installs the dependencies, and sets the command to run the server.
+### Python Server (Legacy)
 
-- `docker-compose.yml`: This file is used to define and run multi-container Docker applications. It specifies the services to run, their configurations, and any dependencies between them.
+- `python-server/`: Original FastAPI server implementation
+  - `src/main.py`: FastAPI server with task management routes
+  - `src/__init__.py`: Python package marker
+  - `requirements.txt`: Python dependencies
+  - `Dockerfile`: Docker configuration for the Python server
+
+### Configuration
+
+- `docker-compose.yml`: Multi-container Docker configuration for running both Node.js servers
+- `README.md`: This file - project overview and documentation
 
 ## Getting Started
 
-To run the FastAPI server using Docker, follow these steps:
+To run both Node.js servers using Docker, follow these steps:
 
-- Build and start the Docker containers by running the following command:
+1. **Build and start the Docker containers:**
 
-  ```shell
-  docker compose up
-  ```
+   ```shell
+   docker compose up --build
+   ```
 
-  This command will build the Docker image for the FastAPI server and start the containers defined in the `docker-compose.yml` file.
+   This command will build Docker images for both Node.js servers and start the containers.
 
-- The FastAPI server should now be running. You can access at port `8000`.
+2. **Access the servers:**
+   - **Node.js Server (Task API)**: http://localhost:8000
+   - **Express Server (Simple)**: http://localhost:8001/health
+
+3. **For local development (without Docker):**
+
+   ```shell
+   # Node.js server
+   cd node-server
+   npm install
+   npm start
+
+   # Express server
+   cd express-server
+   npm install
+   yarn start
+   ```
 
 ## API Routes
 
-The FastAPI server provides the following API routes:
+### Node.js Server (Port 8000)
 
-- `POST /tasks`: Adds a task to the task list. The request body should contain the task details.
+- `GET /`: Returns "Hello World" message
+- `POST /tasks`: Adds a task to the task list
+  ```json
+  {
+    "text": "Your task description"
+  }
+  ```
+- `GET /tasks`: Retrieves all tasks in the task list
 
-- `GET /tasks`: Retrieves the task list.
+### Express Server (Port 8001)
+
+- `GET /health`: Health check endpoint returning server status
+
+## Recent Changes
+
+- **Converted Python FastAPI server to Node.js Express** (now running on port 8000)
+- **Added simple Express server** with no endpoints (port 8001)
+- **Updated Docker Compose** to run both Node.js servers simultaneously
+- **Implemented hot reloading** with nodemon for both servers
+- **Fixed container networking** by binding servers to `0.0.0.0` instead of `localhost`
+- **Added health check endpoints** for monitoring server status
+
+## Development Features
+
+- **Hot Reloading**: Both servers use nodemon for automatic restart on code changes
+- **Docker Support**: Complete containerization with volume mounting for development
+- **Health Monitoring**: Health check endpoints for server status verification
+- **Modern Dependencies**: Updated to latest Express and nodemon versions
