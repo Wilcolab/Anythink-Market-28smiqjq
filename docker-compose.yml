@@ -6,9 +6,10 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: anythink_market
     ports:
-      - 5432:5432
+      - 55432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init-root-user.sql:/docker-entrypoint-initdb.d/init-root-user.sql
 
   node-server:
     build:

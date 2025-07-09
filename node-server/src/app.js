@@ -8,10 +8,10 @@ const PORT = process.env.PORT || 8000;
 // PostgreSQL connection
 const pool = new Pool({
   user: 'postgres',
-  host: 'postgres',
+  host: process.env.PGHOST || 'postgres',
   database: 'anythink_market',
   password: 'postgres',
-  port: 5432,
+  port: process.env.PGPORT ? parseInt(process.env.PGPORT, 10) : 5432,
 });
 
 // Middleware
