@@ -26,19 +26,35 @@ app.get('/', (req, res) => {
 
 // GET /tasks - Get all tasks
 app.get('/tasks', (req, res) => {
-  res.json({ tasks: tasks });
+  console.log('GET /tasks - Current tasks:', tasks);
+  res.json({ 
+    tasks: tasks,
+    count: tasks.length
+  });
 });
 
 // POST /tasks - Add a new task
 app.post('/tasks', (req, res) => {
+  console.log('POST /tasks - Request body:', req.body);
+  
   const { text } = req.body;
   
-  if (!text) {
-    return res.status(400).json({ error: "Task text is required" });
+  if (!text || typeof text !== 'string' || text.trim() === '') {
+    console.log('POST /tasks - Error: Invalid task text');
+    return res.status(400).json({ error: "Task text is required and must be a non-empty string" });
   }
   
-  tasks.push(text);
-  res.json({ message: "Task added successfully" });
+  const trimmedText = text.trim();
+  tasks.push(trimmedText);
+  
+  console.log('POST /tasks - Task added:', trimmedText);
+  console.log('POST /tasks - Current tasks count:', tasks.length);
+  
+  res.json({ 
+    message: "Task added successfully",
+    task: trimmedText,
+    totalTasks: tasks.length
+  });
 });
 
 // Health check endpoint
