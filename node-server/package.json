@@ -4,7 +4,8 @@
   "description": "A simple Node.js server with Docker",
   "main": "src/app.js",
   "scripts": {
-    "start": "nodemon src/app.js"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
   },
   "dependencies": {
     "express": "^4.17.1"
