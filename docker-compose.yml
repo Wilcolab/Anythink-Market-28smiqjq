@@ -1,12 +1,12 @@
 services:
-  python-server:
+  node-server:
     build:
-      context: ./python-server
+      context: ./node-server
       dockerfile: Dockerfile
     ports:
       - 8000:8000
     volumes:
-      - ./python-server/src:/app/src
+      - ./node-server/src:/usr/src/app/src
 
   express-server:
     build:
